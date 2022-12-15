@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  Role     Role   @default(HR)
+}
+
+model Employee {
+  id             Int               @id @default(autoincrement())
+  IDcard         String            @unique
+  email          String
+  firstName      String
+  lastName       String
+  age            Int
+  createAt       DateTime          @default(now())
+  endAt          DateTime?
+  salaryBase     Int
+  picture        String
+  phoneNumber    String
+  emergencyPhone String
+  address        String
+  department     Department?       @relation(fields: [departmentId], references: [id])
+  departmentId   Int?
+  relationship   String
+  child          Int
+  employeeType   String
+  bankName       String
+  bankAccount    String
+  typeofPay      String
+  clock          ClockinClockout[]
+
+}
+
+model Department {
+  id             Int        @id @default(autoincrement())
+  departmentName String     @unique
+  employees      Employee[] 
+}
+
+model ClockinClockout {
+  id         Int       @id @default(autoincrement())
+  clockIn    DateTime  @default(now())
+  clockOut   DateTime
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId Int?
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model SocialSecurityRate {
+  id           Int   @id @default(autoincrement())
+  employeeRate Float
+  ownerRate    Float
+}
+
+enum Role {
+  HR
+  ADMIN
+}
