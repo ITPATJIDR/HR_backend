@@ -1,5 +1,5 @@
 import sessionMiddleware from "./middleware/sessionMiddleware"
-import passport from "./middleware/passportMiddlewareTestJWT"
+import passport from "./middleware/passportMiddleware"
 const express = require('express')
 const cors = require('cors')
 const app = express()

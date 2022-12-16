@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from "express"
 import passport from "../middleware/passportMiddleware"
+import jwt from "jsonwebtoken"
 import { PrismaClient } from '@prisma/client'
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient()
@@ -32,13 +33,16 @@ const userController = {
 	},
 	login:async (req:Request, res: Response, next: NextFunction) => {
 		try{
-			passport.authenticate("local",(err,user,info) =>{
+			passport.authenticate("local",{session:false},(err,user,info) =>{
+
 				if(!user) return res.status(401).json({msg:"username and password incorrect"})
+
 				req.login(user,(err)=>{
+					const token = jwt.sign(user,process.env.JWT_SECRET as string)
 					if (err) throw err;
-					res.status(201).json({user})
-					console.log(req.isAuthenticated())
+					res.status(201).json({user,token})
 				})
+
 			})(req,res,next)
 		}catch(err:any){
 			res.status(500).json({message: err.message});

@@ -3,7 +3,7 @@ import { loginSchema } from "../middleware/validate/schema/login-schema"
 import { validateReauestSchema } from "../middleware/validate/validate-request";
 const auth = require("../middleware/auth")
 const userRouter = require("express").Router();
-const userController = require("../controllers/userControllerTestJWT")
+const userController = require("../controllers/userController")
 
 userRouter.post("/register",registerSchema,validateReauestSchema, userController.register);
 userRouter.post("/login",loginSchema,validateReauestSchema, userController.login)
