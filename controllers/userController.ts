@@ -39,6 +39,11 @@ const userController = {
 
 				req.login(user,(err)=>{
 					const token = jwt.sign(user,process.env.JWT_SECRET as string)
+					res.cookie("refreshtoken",token,{
+						httpOnly: true,
+						path: '/user/refresh_token',
+						maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+					})
 					if (err) throw err;
 					res.status(201).json({user,token})
 				})
@@ -52,6 +57,7 @@ const userController = {
 		try{
 			req.logOut((err) =>{
 				if (err) { return next(err)}
+				res.clearCookie('refreshToken', { path: ' /user/refresh_token' });
 				res.status(204).end()
 			})
 		}catch(err:any){

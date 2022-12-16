@@ -19,6 +19,7 @@ app.use(passport.session())
 app.use("/user",require("./routers/userRouter"));
 app.use("/employee",require("./routers/employeeRouter"));
 app.use("/department",require("./routers/departmentRouter"));
+app.use("/socialSecurityRate",require("./routers/socialSecurityRouter"));
 
 // Server listening
 app.listen(PORT,() =>{
