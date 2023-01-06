@@ -9,6 +9,7 @@ userRouter.post("/register",registerSchema,validateRequestSchema, userController
 userRouter.post("/login",loginSchema,validateRequestSchema, userController.login)
 userRouter.get("/logout",userController.logout)
 userRouter.get("/getUser",auth, userController.getUser)
+userRouter.get("/isLogin",userController.isLogin)
 
 
 module.exports = userRouter;

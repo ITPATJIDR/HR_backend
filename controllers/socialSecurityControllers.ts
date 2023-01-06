@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+import prisma from "../util/database"
 
 const socialSecurityControllers = {
 	createSocialSecurityRate: async (req: Request, res: Response, next: NextFunction) => {

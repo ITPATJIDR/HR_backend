@@ -27,7 +27,7 @@ model Employee {
   createAt       DateTime          @default(now())
   endAt          DateTime?
   salaryBase     Int
-  picture        String
+  picture        String            @default("https://en.m.wikipedia.org/wiki/File:Sample_User_Icon.png")
   phoneNumber    String
   emergencyPhone String
   address        String
@@ -40,13 +40,19 @@ model Employee {
   bankAccount    String
   typeofPay      String
   clock          ClockinClockout[]
-
 }
 
 model Department {
   id             Int        @id @default(autoincrement())
   departmentName String     @unique
-  employees      Employee[] 
+  employees      Employee[]
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
 }
 
 model ClockinClockout {
@@ -56,14 +62,6 @@ model ClockinClockout {
   employee   Employee? @relation(fields: [employeeId], references: [id])
   employeeId Int?
 }
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
-}
-
 model SocialSecurityRate {
   id           Int   @id @default(autoincrement())
   employeeRate Float

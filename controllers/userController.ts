@@ -1,9 +1,8 @@
 import {Request, Response, NextFunction} from "express"
 import passport from "../middleware/passportMiddleware"
 import jwt from "jsonwebtoken"
-import { PrismaClient } from '@prisma/client'
 import bcrypt from "bcrypt";
-const prisma = new PrismaClient()
+import prisma from "../util/database"
 
 const userController = {
 	register: async (req: Request, res: Response,next: NextFunction) => {
@@ -33,19 +32,20 @@ const userController = {
 	},
 	login:async (req:Request, res: Response, next: NextFunction) => {
 		try{
-			passport.authenticate("local",{session:false},(err,user,info) =>{
+			passport.authenticate("local",{failureRedirect:"/"},(err,user,info) =>{
 
 				if(!user) return res.status(401).json({msg:"username and password incorrect"})
 
-				req.login(user,(err)=>{
+				req.login(user,(err) => {
+					if (err) return res.status(500).json({msg:err.message})	
 					const token = jwt.sign(user,process.env.JWT_SECRET as string)
 					res.cookie("refreshtoken",token,{
 						httpOnly: true,
-						path: '/user/refresh_token',
+						path: '/user/refreshToken',
 						maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+						secure: true
 					})
-					if (err) throw err;
-					res.status(201).json({user,token})
+					res.status(200).json({user,token})
 				})
 
 			})(req,res,next)
@@ -57,8 +57,11 @@ const userController = {
 		try{
 			req.logOut((err) =>{
 				if (err) { return next(err)}
-				res.clearCookie('refreshToken', { path: ' /user/refresh_token' });
-				res.status(204).end()
+				res.clearCookie('refreshToken', { path: '/user/refresh_token' });
+				req.session.destroy((err) =>{
+					res.clearCookie('connect.sid')
+					res.status(204).end()
+				})
 			})
 		}catch(err:any){
 			res.status(500).json({message: err.message});
@@ -68,6 +71,14 @@ const userController = {
 		try{
 			let user:any
 			res.status(200).json({user})
+		}catch(err:any){
+			res.status(500).json({message: err.message});
+		}
+	},
+	isLogin: async (req: Request, res: Response, next: NextFunction) =>{
+		try{
+			const status = req.isAuthenticated()
+			res.status(200).json({status:status})
 		}catch(err:any){
 			res.status(500).json({message: err.message});
 		}

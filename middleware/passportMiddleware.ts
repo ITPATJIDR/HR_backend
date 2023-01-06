@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
 import { Strategy as LocaleStrategy } from "passport-local";
+import  prisma  from "../util/database"
 import passport from "passport";
 import bcrypt from "bcrypt";
-const prisma = new PrismaClient();
 const passportJWT = require("passport-jwt"),
   JWTStrategy = passportJWT.Strategy,
   ExtractJWT = passportJWT.ExtractJwt;
@@ -49,16 +48,16 @@ passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(async (req: Request, id: any, done: any) => {
+passport.deserializeUser(async (req: Request, id: any, cb: any) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
     });
-    done(null, user);
+    return cb(null, user);
   } catch (error) {
-    done(error);
+    cb(error);
   }
 });
 

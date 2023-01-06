@@ -8,5 +8,6 @@ const departmentRouter = require("express").Router();
 departmentRouter.post("/createDepartment", departmentSchema, validateRequestSchema, departmentController.createDepartment)
 departmentRouter.post("/addEmployee", addEmployeeSchema, validateRequestSchema, departmentController.addEmployee)
 departmentRouter.get("/findEmployees", auth, departmentController.getAllEmployee)
+departmentRouter.get("/getAllDepartments",auth, departmentController.getDepartments)
 
 module.exports = departmentRouter;
