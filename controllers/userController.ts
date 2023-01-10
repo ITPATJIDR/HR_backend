@@ -69,8 +69,8 @@ const userController = {
 	},
 	getUser: async (req: Request, res: Response, next: NextFunction) =>{
 		try{
-			let user:any
-			res.status(200).json({user})
+			const {id,username}:any = req.user
+			res.status(200).json({id,username})
 		}catch(err:any){
 			res.status(500).json({message: err.message});
 		}

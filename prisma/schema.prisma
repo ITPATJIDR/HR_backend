@@ -27,7 +27,7 @@ model Employee {
   createAt       DateTime          @default(now())
   endAt          DateTime?
   salaryBase     Int
-  picture        String            @default("https://en.m.wikipedia.org/wiki/File:Sample_User_Icon.png")
+  picture        String            @default("https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png")
   phoneNumber    String
   emergencyPhone String
   address        String
@@ -39,6 +39,7 @@ model Employee {
   bankName       String
   bankAccount    String
   typeofPay      String
+  position       EmployeeRole    @default(JUNIOR)
   clock          ClockinClockout[]
 }
 
@@ -71,4 +72,10 @@ model SocialSecurityRate {
 enum Role {
   HR
   ADMIN
+}
+
+enum EmployeeRole{
+  LEADER
+  SENIOR
+  JUNIOR
 }
